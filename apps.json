@@ -1,0 +1,19 @@
+{
+  "meta": {
+    "title": "AI 应用导航台",
+    "subtitle": "统一入口 · 快速触达所有 AI 应用",
+    "adminPassword": "wzp202601"
+  },
+  "categories": [
+    { "id": "tool", "name": "税务", "icon": "🔧", "color": "#3b82f6" },
+    { "id": "content", "name": "本地账", "icon": "📝", "color": "#10b981" },
+    { "id": "data", "name": "财务分析", "icon": "📊", "color": "#f59e0b" },
+    { "id": "automation", "name": "信息披露", "icon": "⚡", "color": "#8b5cf6" },
+    { "id": "other", "name": "通用工具", "icon": "📦", "color": "#6b7280" }
+  ],
+  "apps": [
+    { "id": "a1786031790548", "name": "外币货币性项目&外汇风险附注助手", "url": "https://songmicshome.feishuapp.com/app/app_17bethsyz9e", "description": "可一键生成外币货币性项目&外汇风险附注，其作为财务报表附注的一部分，用于半年报和年报信息披露。", "icon": "🔗", "category": "automation", "platform": "飞书妙搭", "tags": ["财报附注", "信息披露"], "pinned": true },
+    { "id": "a1786032335447", "name": "墨西哥XML格式的CFDI信息识别", "url": "https://aily.feishu.cn/pages/shared/4h1tbb4jx51v8", "description": "批量解析、读取、展示、下载墨西哥的XML格式的发票（即CFDI）。", "icon": "🔗", "category": "tool", "platform": "飞书妙搭", "tags": ["税务", "数据识别", "墨西哥"], "pinned": false },
+    { "id": "a1786064347715", "name": "批量文件扩展名修改工具", "url": "https://songmicshome.feishuapp.com/app/app_4kdau2hmdzy0p", "description": "批量修改文件扩展名；批量excel转pdf", "icon": "🔗", "category": "other", "platform": "飞书妙搭", "tags": ["通用"], "pinned": false }
+  ]
+}

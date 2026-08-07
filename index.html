@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 应用导航台</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="app">
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand-logo">⬡</div>
+      <div class="brand-text">
+        <h1 id="pageTitle">AI 应用导航台</h1>
+        <p id="pageSubtitle">统一入口 · 快速触达所有 AI 应用</p>
+      </div>
+    </div>
+    <div class="topbar-actions">
+      <div class="search">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+        <input id="searchInput" type="text" placeholder="搜索应用名称、描述、标签…  按 / 快捷聚焦" />
+      </div>
+      <button class="btn-icon" id="menuBtn" title="更多操作">⚙️</button>
+    </div>
+  </header>
+
+  <div class="draft-banner" id="draftBanner" hidden>
+    <span class="b-icon">⚠️</span>
+    <span>你有 <b>本地修改</b> 未发布给团队 · 发布方法：⚙️ → 导出配置 → 把 JSON 发给管理员更新部署版</span>
+  </div>
+
+  <div class="menu" id="menu" hidden>
+    <div id="menuItems"></div>
+    <input type="file" id="importFile" accept="application/json" hidden />
+  </div>
+
+  <section class="filters">
+    <div class="filter-chips" id="categoryChips"></div>
+    <div class="view-switch">
+      <button data-view="group" class="active">分组视图</button>
+      <button data-view="flat">平铺视图</button>
+    </div>
+  </section>
+
+  <main class="content" id="content"></main>
+
+  <button class="fab" id="addBtn" title="添加应用">＋</button>
+
+  <!-- 添加/编辑弹窗 -->
+  <div class="modal" id="appModal" hidden>
+    <div class="modal-mask"></div>
+    <div class="modal-panel">
+      <div class="modal-head">
+        <h2 id="modalTitle">添加应用</h2>
+        <button class="btn-icon" id="modalClose" title="关闭">✕</button>
+      </div>
+      <form id="appForm" class="modal-body">
+        <input type="hidden" id="f_id">
+        <div class="field">
+          <label>应用名称 *</label>
+          <input id="f_name" required placeholder="如：库存查询系统">
+        </div>
+        <div class="field">
+          <label>访问地址 *</label>
+          <input id="f_url" required type="url" placeholder="https://...">
+        </div>
+        <div class="field">
+          <label>描述</label>
+          <textarea id="f_desc" placeholder="一句话说明这个应用干什么用"></textarea>
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label>图标</label>
+            <input id="f_icon" placeholder="emoji 或图片 URL" value="🔗">
+          </div>
+          <div class="field">
+            <label>用途分类</label>
+            <select id="f_category"></select>
+          </div>
+        </div>
+        <div class="field">
+          <label>AI 开发平台</label>
+          <input id="f_platform" placeholder="飞书妙搭 / WORKBUDDY / OPENCLAW / VSCODE…">
+        </div>
+        <div class="field">
+          <label>标签（逗号分隔）</label>
+          <input id="f_tags" placeholder="如：仓储,查询">
+        </div>
+        <div class="field checkbox">
+          <input type="checkbox" id="f_pinned">
+          <label for="f_pinned">置顶（常用）</label>
+        </div>
+        <div class="modal-foot">
+          <button type="button" class="btn ghost" id="modalCancel">取消</button>
+          <button type="submit" class="btn primary">保存</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 管理分类弹窗 -->
+  <div class="modal" id="catModal" hidden>
+    <div class="modal-mask"></div>
+    <div class="modal-panel">
+      <div class="modal-head">
+        <h2>管理分类</h2>
+        <button class="btn-icon" id="catModalClose" title="关闭">✕</button>
+      </div>
+      <div class="modal-body">
+        <div id="catList"></div>
+        <div class="modal-foot">
+          <button class="btn" id="catModalAdd">＋ 添加分类</button>
+          <button class="btn primary" id="catModalCancel">完成</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast" hidden></div>
+</div>
+<script src="app.js"></script>
+</body>
+</html>
