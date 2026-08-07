@@ -244,8 +244,15 @@ async function init() {
   baseState = await loadBase();
   const draft = loadDraft();
   if (draft) {
-    state = draft;
-    hasDraft = true;
+    // 自动比对：如果草稿内容与部署版一致，说明已发版，清除草稿
+    if (JSON.stringify(draft) === JSON.stringify(baseState)) {
+      localStorage.removeItem(LS_DRAFT_KEY);
+      state = JSON.parse(JSON.stringify(baseState));
+      hasDraft = false;
+    } else {
+      state = draft;
+      hasDraft = true;
+    }
   } else {
     state = JSON.parse(JSON.stringify(baseState));
     hasDraft = false;
