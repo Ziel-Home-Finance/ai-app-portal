@@ -329,7 +329,7 @@ function getFiltered() {
   if (filter.category !== 'all') apps = apps.filter((a) => a.category === filter.category);
   if (filter.q) {
     apps = apps.filter((a) => {
-      const t = [a.name, a.description, a.platform, a.contact, (a.tags || []).join(' ')].join(' ').toLowerCase();
+      const t = [a.name, a.description, a.platform, a.contact, a.group, (a.tags || []).join(' ')].join(' ').toLowerCase();
       return t.includes(filter.q);
     });
   }
@@ -368,7 +368,7 @@ function cardHTML(a) {
     : '<div class="card-icon">' + escapeHTML(a.icon || '🔗') + '</div>';
   return '<div class="card' + (a.pinned ? ' pinned' : '') + '" data-id="' + a.id + '">'
     + iconHTML
-    + '<div class="card-top"><div class="card-name" title="' + escapeHTML(a.name) + '">' + escapeHTML(a.name) + '</div>' + (a.platform || a.contact ? '<div class="card-badges">' + (a.platform ? '<span class="card-platform">' + escapeHTML(a.platform) + '</span>' : '') + (a.contact ? '<span class="card-contact">联系人：' + escapeHTML(a.contact) + '</span>' : '') + '</div>' : '') + '</div>'
+    + '<div class="card-top"><div class="card-name" title="' + escapeHTML(a.name) + '">' + escapeHTML(a.name) + '</div>' + (a.platform || a.contact || a.group ? '<div class="card-badges">' + (a.platform ? '<span class="card-platform">' + escapeHTML(a.platform) + '</span>' : '') + (a.contact ? '<span class="card-contact">联系人：' + escapeHTML(a.contact) + '</span>' : '') + (a.group ? '<span class="card-group">' + escapeHTML(a.group) + '</span>' : '') + '</div>' : '') + '</div>'
     + '<div class="card-desc">' + escapeHTML(a.description || '') + '</div>'
     + (tags ? '<div class="card-tags">' + tags + '</div>' : '')
     + (isAdmin ? '<div class="card-actions"><button data-act="edit" title="编辑">✎</button><button data-act="pin" title="置顶">' + (a.pinned ? '📌' : '📍') + '</button><button data-act="del" title="删除">🗑</button></div>' : '')
@@ -419,6 +419,7 @@ function openModal(id) {
     $('#f_category').value = a.category || 'other';
     $('#f_platform').value = a.platform || '';
     $('#f_contact').value = a.contact || '';
+    $('#f_group').value = a.group || '';
     $('#f_tags').value = (a.tags || []).join(', ');
     $('#f_pinned').checked = !!a.pinned;
   } else {
@@ -441,6 +442,7 @@ function onSubmit(e) {
     category: $('#f_category').value,
     platform: $('#f_platform').value.trim(),
     contact: $('#f_contact').value.trim(),
+    group: $('#f_group').value.trim(),
     tags: $('#f_tags').value.split(',').map((s) => s.trim()).filter(Boolean),
     pinned: $('#f_pinned').checked
   };
