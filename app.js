@@ -368,7 +368,7 @@ function cardHTML(a) {
     : '<div class="card-icon">' + escapeHTML(a.icon || '🔗') + '</div>';
   return '<div class="card' + (a.pinned ? ' pinned' : '') + '" data-id="' + a.id + '">'
     + iconHTML
-    + '<div class="card-top"><div class="card-name" title="' + escapeHTML(a.name) + '">' + escapeHTML(a.name) + '</div>' + (a.platform || a.contact || a.group ? '<div class="card-badges">' + (a.platform ? '<span class="card-platform">' + escapeHTML(a.platform) + '</span>' : '') + (a.contact ? '<span class="card-contact">联系人：' + escapeHTML(a.contact) + '</span>' : '') + (a.group ? '<span class="card-group">' + escapeHTML(a.group) + '</span>' : '') + '</div>' : '') + '</div>'
+    + '<div class="card-top"><div class="card-name" title="' + escapeHTML(a.name) + '">' + escapeHTML(a.name) + '</div>' + (a.platform || a.contact || a.group ? '<div class="card-badges">' + (a.platform ? '<span class="card-platform">' + escapeHTML(a.platform) + '</span>' : '') + (a.contact ? '<span class="card-contact">' + escapeHTML(a.contact) + '</span>' : '') + (a.group ? '<span class="card-group">' + escapeHTML(a.group) + '</span>' : '') + '</div>' : '') + '</div>'
     + '<div class="card-desc">' + escapeHTML(a.description || '') + '</div>'
     + (tags ? '<div class="card-tags">' + tags + '</div>' : '')
     + (isAdmin ? '<div class="card-actions"><button data-act="edit" title="编辑">✎</button><button data-act="pin" title="置顶">' + (a.pinned ? '📌' : '📍') + '</button><button data-act="del" title="删除">🗑</button></div>' : '')
