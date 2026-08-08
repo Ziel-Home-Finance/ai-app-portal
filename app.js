@@ -244,8 +244,10 @@ async function init() {
   baseState = await loadBase();
   const draft = loadDraft();
   if (draft) {
-    // 自动比对：如果草稿内容与部署版一致，说明已发版，清除草稿
-    if (JSON.stringify(draft) === JSON.stringify(baseState)) {
+    // 只比对应用和分类数据（不含 adminPassword，因为本地密码可能与部署版不同）
+    const draftData = JSON.stringify({ categories: draft.categories || [], apps: draft.apps || [], title: draft.meta?.title, subtitle: draft.meta?.subtitle });
+    const baseData = JSON.stringify({ categories: baseState.categories || [], apps: baseState.apps || [], title: baseState.meta?.title, subtitle: baseState.meta?.subtitle });
+    if (draftData === baseData) {
       localStorage.removeItem(LS_DRAFT_KEY);
       state = JSON.parse(JSON.stringify(baseState));
       hasDraft = false;
