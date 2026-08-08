@@ -294,6 +294,7 @@ function bind() {
     if (!e.target.closest('#menu') && !e.target.closest('#menuBtn')) $('#menu').hidden = true;
   });
   $('#importFile').addEventListener('change', onImport);
+  $('#draftDiscardBtn').addEventListener('click', discardDraft);
   $('#catModalClose').addEventListener('click', closeCatModal);
   $('#catModalCancel').addEventListener('click', closeCatModal);
   $('#catModalAdd').addEventListener('click', addCat);
