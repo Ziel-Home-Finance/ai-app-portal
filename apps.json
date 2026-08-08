@@ -42,23 +42,25 @@
       "name": "外币货币性项目&外汇风险附注助手",
       "url": "https://songmicshome.feishuapp.com/app/app_17bethsyz9e",
       "description": "可一键生成外币货币性项目&外汇风险附注，其作为财务报表附注的一部分，用于半年报和年报信息披露。",
-      "icon": "🔗",
+      "icon": "https://ziel-home-finance.github.io/ai-app-portal/icons/外币货币性项目&外汇风险附注助手.png",
       "category": "automation",
       "platform": "飞书妙搭",
+      "contact": "王志鹏",
       "tags": [
         "财报附注",
         "信息披露"
       ],
-      "pinned": true
+      "pinned": false
     },
     {
       "id": "a1786032335447",
       "name": "墨西哥XML格式的CFDI信息识别",
       "url": "https://aily.feishu.cn/pages/shared/4h1tbb4jx51v8",
       "description": "批量解析、读取、展示、下载墨西哥的XML格式的发票（即CFDI）。",
-      "icon": "🔗",
+      "icon": "https://ziel-home-finance.github.io/ai-app-portal/icons/墨西哥XML格式的CFDI信息识别.png",
       "category": "tool",
       "platform": "飞书妙搭",
+      "contact": "孙茜",
       "tags": [
         "税务",
         "数据识别",
@@ -71,11 +73,27 @@
       "name": "批量改文件名/扩展名/excel转pdf",
       "url": "https://songmicshome.feishuapp.com/app/app_4kdau2hmdzy0p",
       "description": "批量修改文件名、文件扩展名，excel转pdf",
-      "icon": "🔗",
+      "icon": "https://ziel-home-finance.github.io/ai-app-portal/icons/批量改文件名扩展名excel转pdf.png",
       "category": "other",
       "platform": "飞书妙搭",
+      "contact": "王志鹏",
       "tags": [
         "通用"
+      ],
+      "pinned": false
+    },
+    {
+      "id": "a1786167013386",
+      "name": "现金流自动标记工具",
+      "url": "https://songmicshome.feishuapp.com/app/app_4kfgpz2f3nzxp",
+      "description": "依据业务事项、凭证抬头文本内容，自助判断B04的披露业务事项。",
+      "icon": "https://ziel-home-finance.github.io/ai-app-portal/icons/现金流自动标记工具.png",
+      "category": "automation",
+      "platform": "飞书妙搭",
+      "contact": "赵晨辉",
+      "tags": [
+        "财报附注",
+        "信息披露"
       ],
       "pinned": false
     }
