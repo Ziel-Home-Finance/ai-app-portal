@@ -353,6 +353,14 @@ function render() {
   }
   if (filter.view === 'flat') {
     c.innerHTML = '<div class="grid">' + apps.map(cardHTML).join('') + '</div>';
+  } else if (filter.view === 'groupby') {
+    // 按组别分组
+    const groups = {};
+    apps.forEach((a) => { const g = a.group || '未分组'; (groups[g] = groups[g] || []).push(a); });
+    const groupNames = Object.keys(groups).sort();
+    c.innerHTML = groupNames.map((g) => {
+      return '<div class="group"><div class="group-head"><span class="gicon">👥</span><h3>' + escapeHTML(g) + '</h3><span class="gcount">' + groups[g].length + '</span></div><div class="grid">' + groups[g].map(cardHTML).join('') + '</div></div>';
+    }).join('');
   } else {
     const groups = {};
     apps.forEach((a) => { (groups[a.category] = groups[a.category] || []).push(a); });
