@@ -159,7 +159,9 @@ function renderCatList() {
     const used = state.apps.filter((a) => a.category === c.id).length;
     const row = document.createElement('div');
     row.className = 'cat-row';
-    const ico = document.createElement('span'); ico.className = 'cat-icon'; ico.textContent = c.icon || '📦';
+    const ico = document.createElement('span'); ico.className = 'cat-icon';
+    if (c.icon && /^https?:\/\//.test(c.icon)) { const img = document.createElement('img'); img.src = c.icon; img.className = 'cat-icon-img'; ico.appendChild(img); }
+    else ico.textContent = c.icon || '📦';
     const nm = document.createElement('span'); nm.className = 'cat-name'; nm.textContent = c.name;
     const cnt = document.createElement('span'); cnt.className = 'cat-count'; cnt.textContent = used + ' 个应用';
     const acts = document.createElement('div'); acts.className = 'cat-actions';
@@ -311,11 +313,17 @@ function bind() {
 function renderCategories() {
   const wrap = $('#categoryChips');
   wrap.innerHTML = '';
-  wrap.appendChild(makeChip('all', '全部', state.apps.length, filter.category === 'all'));
+  wrap.appendChild(makeChip('all', '📦 全部', state.apps.length, filter.category === 'all'));
   state.categories.forEach((c) => {
     const count = state.apps.filter((a) => a.category === c.id).length;
-    wrap.appendChild(makeChip(c.id, (c.icon || '📦') + ' ' + c.name, count, filter.category === c.id));
+    const iconHTML = catIconHTML(c.icon);
+    wrap.appendChild(makeChip(c.id, iconHTML + ' ' + escapeHTML(c.name), count, filter.category === c.id));
   });
+}
+function catIconHTML(icon) {
+  if (!icon) return '📦';
+  if (/^https?:\/\//.test(icon)) return '<img class="cat-icon-img" src="' + escapeHTML(icon) + '" alt="">';
+  return escapeHTML(icon);
 }
 function makeChip(id, label, count, active) {
   const b = document.createElement('button');
@@ -355,7 +363,7 @@ function render() {
       }
     });
     c.innerHTML = catOrder.filter((cc) => groups[cc.id]).map((cc) => {
-      return '<div class="group"><div class="group-head"><span class="gicon">' + (cc.icon || '📦') + '</span><h3>' + escapeHTML(cc.name) + '</h3><span class="gcount">' + groups[cc.id].length + '</span></div><div class="grid">' + groups[cc.id].map(cardHTML).join('') + '</div></div>';
+      return '<div class="group"><div class="group-head"><span class="gicon">' + catIconHTML(cc.icon) + '</span><h3>' + escapeHTML(cc.name) + '</h3><span class="gcount">' + groups[cc.id].length + '</span></div><div class="grid">' + groups[cc.id].map(cardHTML).join('') + '</div></div>';
     }).join('');
   }
   bindCards();
