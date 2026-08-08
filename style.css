@@ -147,3 +147,5 @@ body.readonly .card-actions { display: none !important; }
 .draft-banner[hidden] { display: none; }
 .draft-banner .b-icon { font-size: 15px; }
 .draft-banner b { color: #78350f; }
+.draft-discard-btn { margin-left: 12px; padding: 4px 12px; border: 1px solid #f59e0b; background: #fff; color: #92400e; border-radius: 6px; font-size: 12px; cursor: pointer; white-space: nowrap; transition: .15s; }
+.draft-discard-btn:hover { background: #f59e0b; color: #fff; }
