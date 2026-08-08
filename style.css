@@ -65,6 +65,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Micr
 .card-badges{position:absolute;top:14px;right:14px;display:flex;flex-direction:column;align-items:flex-end;gap:4px;z-index:1}
 .card-platform{font-size:11px;color:var(--text-sub);background:var(--bg);padding:3px 8px;border-radius:6px;white-space:nowrap}
 .card-contact{font-size:11px;color:var(--text-sub);white-space:nowrap}
+.card-group{font-size:11px;color:var(--text-sub);white-space:nowrap}
 .card-desc{font-size:13px;color:var(--text-sub);line-height:1.5;min-height:20px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .card-tags{display:flex;gap:6px;flex-wrap:wrap}
 .card-tags span{font-size:11px;color:var(--text-sub);background:var(--bg);padding:2px 7px;border-radius:5px}
