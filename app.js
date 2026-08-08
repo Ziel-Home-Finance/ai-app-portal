@@ -326,7 +326,7 @@ function getFiltered() {
   if (filter.category !== 'all') apps = apps.filter((a) => a.category === filter.category);
   if (filter.q) {
     apps = apps.filter((a) => {
-      const t = [a.name, a.description, a.platform, (a.tags || []).join(' ')].join(' ').toLowerCase();
+      const t = [a.name, a.description, a.platform, a.contact, (a.tags || []).join(' ')].join(' ').toLowerCase();
       return t.includes(filter.q);
     });
   }
@@ -367,6 +367,7 @@ function cardHTML(a) {
     + iconHTML
     + '<div class="card-top"><div class="card-name" title="' + escapeHTML(a.name) + '">' + escapeHTML(a.name) + '</div>' + (a.platform ? '<span class="card-platform">' + escapeHTML(a.platform) + '</span>' : '') + '</div>'
     + '<div class="card-desc">' + escapeHTML(a.description || '') + '</div>'
+    + (a.contact ? '<div class="card-contact">👤 ' + escapeHTML(a.contact) + '</div>' : '')
     + (tags ? '<div class="card-tags">' + tags + '</div>' : '')
     + (isAdmin ? '<div class="card-actions"><button data-act="edit" title="编辑">✎</button><button data-act="pin" title="置顶">' + (a.pinned ? '📌' : '📍') + '</button><button data-act="del" title="删除">🗑</button></div>' : '')
     + '</div>';
@@ -415,6 +416,7 @@ function openModal(id) {
     $('#f_icon').value = a.icon || '🔗';
     $('#f_category').value = a.category || 'other';
     $('#f_platform').value = a.platform || '';
+    $('#f_contact').value = a.contact || '';
     $('#f_tags').value = (a.tags || []).join(', ');
     $('#f_pinned').checked = !!a.pinned;
   } else {
@@ -436,6 +438,7 @@ function onSubmit(e) {
     icon: $('#f_icon').value.trim() || '🔗',
     category: $('#f_category').value,
     platform: $('#f_platform').value.trim(),
+    contact: $('#f_contact').value.trim(),
     tags: $('#f_tags').value.split(',').map((s) => s.trim()).filter(Boolean),
     pinned: $('#f_pinned').checked
   };
