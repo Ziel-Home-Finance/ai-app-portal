@@ -6,6 +6,12 @@
   },
   "categories": [
     {
+      "id": "automation",
+      "name": "信息披露",
+      "icon": "⚡",
+      "color": "#8b5cf6"
+    },
+    {
       "id": "tool",
       "name": "税务",
       "icon": "https://ziel-home-finance.github.io/ai-app-portal/icons/tax.png",
@@ -22,12 +28,6 @@
       "name": "财务分析",
       "icon": "📊",
       "color": "#f59e0b"
-    },
-    {
-      "id": "automation",
-      "name": "信息披露",
-      "icon": "⚡",
-      "color": "#8b5cf6"
     },
     {
       "id": "other",
