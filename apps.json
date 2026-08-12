@@ -100,6 +100,23 @@
         "信息披露"
       ],
       "pinned": false
+    },
+    {
+      "id": "a1786503194536",
+      "name": "六大往来填报",
+      "url": "https://songmicshome.feishu.cn/base/ShJ3bPQAVa4fGhsNT5UcUAL4nkh?table=tblJmAmXWmNTFzr8&view=vewspYup9B",
+      "description": "统一六大往来披露名称及款项性质，规范后续财务披露与复核口径",
+      "icon": "https://ziel-home-finance.github.io/ai-app-portal/icons/六大往来填报.png",
+      "category": "automation",
+      "platform": "飞书多维表格",
+      "contact": "张玥",
+      "group": "报表合规组",
+      "tags": [
+        "财报附注",
+        "信息披露",
+        "数据治理"
+      ],
+      "pinned": false
     }
   ]
 }
