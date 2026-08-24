@@ -117,6 +117,23 @@
         "数据治理"
       ],
       "pinned": false
+    },
+    {
+      "id": "a1787306520146",
+      "name": "可转债台账",
+      "url": "https://872ba8ec86ff4fcaae9872c333a7e7af.app.workbuddy.link/?role=guest",
+      "description": "可转债台账测算、会计分录生成、信披指标获取",
+      "icon": "🔗",
+      "category": "automation",
+      "platform": "WORKBUDDY",
+      "contact": "王志鹏",
+      "group": "报表合规组",
+      "tags": [
+        "账务核算",
+        "信息披露",
+        "业务台账"
+      ],
+      "pinned": false
     }
   ]
 }
