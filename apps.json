@@ -121,9 +121,9 @@
     {
       "id": "a1787306520146",
       "name": "可转债台账",
-      "url": "https://872ba8ec86ff4fcaae9872c333a7e7af.app.workbuddy.link/?role=guest",
+      "url": "https://3a7f569c12834bdeb1a51148e70815a5.app.workbuddy.link/",
       "description": "可转债台账测算、会计分录生成、信披指标获取",
-      "icon": "🔗",
+      "icon": "https://ziel-home-finance.github.io/ai-app-portal/icons/可转债1.png",
       "category": "automation",
       "platform": "WORKBUDDY",
       "contact": "王志鹏",
