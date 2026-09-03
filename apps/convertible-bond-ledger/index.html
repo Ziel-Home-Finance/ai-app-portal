@@ -796,19 +796,134 @@ let g_autoCalc = true;       // 自动计算开关
 let g_debounceTimer = null;   // 防抖计时器
 let g_currentLedgerId = null;  // 当前加载的台账ID
 
-// ========== 台账存储 (localStorage) ==========
+// ========== 台账存储 (Supabase 云端 + localStorage 缓存) ==========
 var STORAGE_KEY = 'convertible_bond_ledgers';
 var DEFAULT_LEDGER_KEY = 'convertible_bond_default_ledger';
 
-function getLedgers() {
+// Supabase 配置（需要替换为你的项目信息）
+var SUPABASE_URL = '';   // 如 'https://xxxxx.supabase.co'
+var SUPABASE_KEY = '';   // anon public key
+var SUPABASE_TABLE = 'bond_ledgers';
+
+// 检测是否已配置 Supabase
+function hasSupabase() {
+  return SUPABASE_URL && SUPABASE_KEY;
+}
+
+// ========== 云端操作 ==========
+async function supabaseGetLedgers() {
+  var resp = await fetch(SUPABASE_URL + '/rest/v1/' + SUPABASE_TABLE + '?order=updated_at.desc', {
+    headers: {
+      'apikey': SUPABASE_KEY,
+      'Authorization': 'Bearer ' + SUPABASE_KEY,
+      'Content-Type': 'application/json'
+    }
+  });
+  if (!resp.ok) throw new Error('Supabase query failed: ' + resp.status);
+  var rows = await resp.json();
+  // 转换数据库行 → 前端台账对象
+  return rows.map(function(row) {
+    return {
+      id: row.id,
+      name: row.name,
+      params: row.params || {},
+      createdAt: row.created_at,
+      createdTs: row.created_ts || '',
+      updatedAt: row.updated_at,
+      updatedTs: row.updated_ts || ''
+    };
+  });
+}
+
+async function supabaseUpsertLedger(ledger) {
+  var body = {
+    id: ledger.id,
+    name: ledger.name,
+    params: ledger.params,
+    created_at: ledger.createdAt,
+    created_ts: ledger.createdTs || '',
+    updated_at: ledger.updatedAt,
+    updated_ts: ledger.updatedTs || ''
+  };
+  var resp = await fetch(SUPABASE_URL + '/rest/v1/' + SUPABASE_TABLE, {
+    method: 'POST',
+    headers: {
+      'apikey': SUPABASE_KEY,
+      'Authorization': 'Bearer ' + SUPABASE_KEY,
+      'Content-Type': 'application/json',
+      'Prefer': 'resolution=merge-duplicates'
+    },
+    body: JSON.stringify(body)
+  });
+  if (!resp.ok) throw new Error('Supabase upsert failed: ' + resp.status);
+}
+
+async function supabaseDeleteLedger(id) {
+  var resp = await fetch(SUPABASE_URL + '/rest/v1/' + SUPABASE_TABLE + '?id=eq.' + encodeURIComponent(id), {
+    method: 'DELETE',
+    headers: {
+      'apikey': SUPABASE_KEY,
+      'Authorization': 'Bearer ' + SUPABASE_KEY
+    }
+  });
+  if (!resp.ok) throw new Error('Supabase delete failed: ' + resp.status);
+}
+
+// ========== 本地操作（localStorage 缓存） ==========
+function localGetLedgers() {
   try {
     var raw = localStorage.getItem(STORAGE_KEY);
     return raw ? JSON.parse(raw) : [];
   } catch(e) { return []; }
 }
 
-function saveLedgers(ledgers) {
+function localSaveLedgers(ledgers) {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(ledgers));
+}
+
+// ========== 统一接口（自动选择云端/本地） ==========
+function getLedgers() {
+  return localGetLedgers(); // 同步返回本地缓存，异步刷新云端
+}
+
+function saveLedgers(ledgers) {
+  localSaveLedgers(ledgers); // 先存本地
+}
+
+// 异步从云端刷新台账列表
+async function refreshLedgersFromCloud() {
+  if (!hasSupabase()) return;
+  try {
+    var ledgers = await supabaseGetLedgers();
+    localSaveLedgers(ledgers);
+    renderLedgerList();
+    var statusEl = document.getElementById('calcStatus');
+    if (statusEl) { statusEl.textContent = '✓ 已从云端同步 ' + ledgers.length + ' 份台账'; statusEl.className = 'calc-status done'; }
+  } catch(err) {
+    console.error('Cloud sync failed:', err);
+    var statusEl = document.getElementById('calcStatus');
+    if (statusEl) { statusEl.textContent = '⚠ 云端同步失败，使用本地数据'; statusEl.className = 'calc-status error'; }
+  }
+}
+
+// 异步保存单条台账到云端
+async function syncLedgerToCloud(ledger) {
+  if (!hasSupabase()) return;
+  try {
+    await supabaseUpsertLedger(ledger);
+  } catch(err) {
+    console.error('Cloud save failed:', err);
+  }
+}
+
+// 异步删除云端台账
+async function deleteLedgerFromCloud(id) {
+  if (!hasSupabase()) return;
+  try {
+    await supabaseDeleteLedger(id);
+  } catch(err) {
+    console.error('Cloud delete failed:', err);
+  }
 }
 
 function collectParams() {
@@ -898,7 +1013,17 @@ function saveLedger() {
   renderLedgerList();
   document.getElementById('saveName').value = name;
   var statusEl = document.getElementById('calcStatus');
-  if (statusEl) { statusEl.textContent = '✓ 台账已保存'; statusEl.className = 'calc-status done'; }
+  if (statusEl) { statusEl.textContent = '✓ 台账已保存' + (hasSupabase() ? '（同步中…）' : ''); statusEl.className = 'calc-status done'; }
+  // 异步同步到云端
+  var savedLedger = null;
+  for (var i = 0; i < ledgers.length; i++) {
+    if (ledgers[i].id === g_currentLedgerId) { savedLedger = ledgers[i]; break; }
+  }
+  if (savedLedger) {
+    syncLedgerToCloud(savedLedger).then(function() {
+      if (statusEl && hasSupabase()) { statusEl.textContent = '✓ 台账已保存并同步到云端'; statusEl.className = 'calc-status done'; }
+    });
+  }
 }
 
 function loadLedger(id) {
@@ -929,6 +1054,8 @@ function deleteLedger(id) {
     localStorage.removeItem(DEFAULT_LEDGER_KEY);
   }
   renderLedgerList();
+  // 异步删除云端数据
+  deleteLedgerFromCloud(id);
 }
 
 // ========== 默认台账 ==========
@@ -1033,7 +1160,9 @@ function copyLedger(id) {
   saveLedgers(ledgers);
   renderLedgerList();
   var statusEl = document.getElementById('calcStatus');
-  if (statusEl) { statusEl.textContent = '✓ 已复制为「' + newName + '」'; statusEl.className = 'calc-status done'; }
+  if (statusEl) { statusEl.textContent = '✓ 已复制为「' + newName + '」' + (hasSupabase() ? '（同步中…）' : ''); statusEl.className = 'calc-status done'; }
+  // 异步同步到云端
+  syncLedgerToCloud(ledgers[ledgers.length - 1]);
 }
 
 function renderLedgerList() {
@@ -2264,6 +2393,9 @@ window.addEventListener('DOMContentLoaded', function() {
       localStorage.removeItem(DEFAULT_LEDGER_KEY);
     }
   }
+
+  // 从云端同步台账数据
+  refreshLedgersFromCloud();
 
   if (dbg) dbg.innerHTML += '<div>▶ 初始化完成</div>';
 });
