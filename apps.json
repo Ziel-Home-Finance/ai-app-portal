@@ -34,6 +34,12 @@
       "name": "通用工具",
       "icon": "📦",
       "color": "#6b7280"
+    },
+    {
+      "id": "cat_1788430935120",
+      "name": "主数据",
+      "icon": "📁",
+      "color": "#6b7280"
     }
   ],
   "apps": [
@@ -121,7 +127,7 @@
     {
       "id": "a1787306520146",
       "name": "可转债台账",
-      "url": "https://3a7f569c12834bdeb1a51148e70815a5.app.workbuddy.link/",
+      "url": "https://ziel-home-finance.github.io/ai-app-portal/apps/convertible-bond-ledger/",
       "description": "可转债台账测算、会计分录生成、信披指标获取",
       "icon": "https://ziel-home-finance.github.io/ai-app-portal/icons/可转债1.png",
       "category": "automation",
