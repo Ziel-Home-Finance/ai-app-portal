@@ -138,7 +138,7 @@
     {
       "id": "a1788228069407",
       "name": "墨西哥发票管理系统",
-      "url": "https://a5b6ab3639e34b2d9a70b134f458ef58.app.workbuddy.link/ledger",
+      "url": "https://a5b6ab3639e34b2d9a70b134f458ef58.app.workbuddy.link/",
       "description": "墨西哥XML发票、PDF关单的识别、存储、数据管理分析",
       "icon": "https://ziel-home-finance.github.io/ai-app-portal/icons/墨西哥发票管理系统.png?v=20260901b",
       "category": "tool",
@@ -149,6 +149,39 @@
         "税务",
         "数据识别",
         "墨西哥"
+      ],
+      "pinned": false
+    },
+    {
+      "id": "a1788329101183",
+      "name": "外汇衍生工具台账",
+      "url": "https://ef122976831949888ceef4e156f68053.app.workbuddy.link/",
+      "description": "共享台账、汇率波动与套期有效性分析",
+      "icon": "🔗",
+      "category": "data",
+      "platform": "WORKBUDDY",
+      "contact": "王志鹏",
+      "group": "报表合规组",
+      "tags": [
+        "账务核算",
+        "财务分析",
+        "信息披露",
+        "业务台账"
+      ],
+      "pinned": false
+    },
+    {
+      "id": "a1788430447081",
+      "name": "成本利润中心查询系统",
+      "url": "https://songmicshome.feishuapp.com/app/app_17dce915k0r",
+      "description": "成本中心与利润中心的快捷查询",
+      "icon": "🔗",
+      "category": "other",
+      "platform": "飞书妙搭",
+      "contact": "于利巧",
+      "group": "报表合规组",
+      "tags": [
+        "基础数据"
       ],
       "pinned": false
     }
