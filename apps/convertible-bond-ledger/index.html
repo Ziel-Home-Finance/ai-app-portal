@@ -693,6 +693,9 @@ table tbody tr.total-row { background: var(--warning-light); font-weight: 700; b
         <button class="btn btn-success" id="btnSaveQuick">💾 保存</button>
         <button class="btn btn-secondary" id="btnSample">📖 加载示例</button>
         <button class="btn btn-secondary" id="btnReset">↺ 重置</button>
+        <button class="btn btn-secondary" id="btnExportData">📤 导出数据</button>
+        <button class="btn btn-secondary" id="btnImportData">📥 导入数据</button>
+        <input type="file" id="importFileInput" accept=".json" style="display:none;">
         <label class="auto-toggle">
           <input type="checkbox" id="autoCalcToggle" checked>
           <span class="toggle-slider"></span>
@@ -2019,6 +2022,73 @@ function exportExcel() {
   XLSX.writeFile(wb, fileName);
 }
 
+// ========== 导出/导入数据（跨域名迁移） ==========
+function exportData() {
+  var ledgers = getLedgers();
+  var defaultId = getDefaultLedgerId();
+  var data = {
+    version: '1.0',
+    exportDate: new Date().toISOString(),
+    ledgers: ledgers,
+    defaultLedgerId: defaultId
+  };
+  var json = JSON.stringify(data, null, 2);
+  var blob = new Blob([json], {type: 'application/json'});
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href = url;
+  a.download = '可转债台账数据_' + new Date().toISOString().slice(0,10) + '.json';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  var statusEl = document.getElementById('calcStatus');
+  if (statusEl) { statusEl.textContent = '✓ 已导出 ' + ledgers.length + ' 份台账数据'; statusEl.className = 'calc-status done'; }
+}
+
+function importData(file) {
+  var reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      var data = JSON.parse(e.target.result);
+      if (!data.ledgers || !Array.isArray(data.ledgers)) {
+        alert('文件格式不正确');
+        return;
+      }
+      // 合并导入：保留现有台账，追加不存在的
+      var existing = getLedgers();
+      var existingIds = existing.map(function(l) { return l.id; });
+      var imported = 0;
+      for (var i = 0; i < data.ledgers.length; i++) {
+        if (existingIds.indexOf(data.ledgers[i].id) < 0) {
+          existing.push(data.ledgers[i]);
+          imported++;
+        } else {
+          // 已存在则覆盖
+          for (var j = 0; j < existing.length; j++) {
+            if (existing[j].id === data.ledgers[i].id) {
+              existing[j] = data.ledgers[i];
+              break;
+            }
+          }
+          imported++;
+        }
+      }
+      saveLedgers(existing);
+      // 导入默认台账设置
+      if (data.defaultLedgerId) {
+        localStorage.setItem(DEFAULT_LEDGER_KEY, data.defaultLedgerId);
+      }
+      renderLedgerList();
+      var statusEl = document.getElementById('calcStatus');
+      if (statusEl) { statusEl.textContent = '✓ 已导入 ' + imported + ' 份台账数据'; statusEl.className = 'calc-status done'; }
+    } catch(err) {
+      alert('导入失败：' + err.message);
+    }
+  };
+  reader.readAsText(file);
+}
+
 // ========== 示例数据 ==========
 function loadSample() {
   document.getElementById('bondName').value = '示例可转债001';
@@ -2113,6 +2183,18 @@ window.addEventListener('DOMContentLoaded', function() {
   });
   document.getElementById('btnPrint').addEventListener('click', function() {
     window.print();
+  });
+  document.getElementById('btnExportData').addEventListener('click', function() {
+    exportData();
+  });
+  document.getElementById('btnImportData').addEventListener('click', function() {
+    document.getElementById('importFileInput').click();
+  });
+  document.getElementById('importFileInput').addEventListener('change', function(e) {
+    if (e.target.files.length > 0) {
+      importData(e.target.files[0]);
+      e.target.value = ''; // 重置，允许重复导入同一文件
+    }
   });
 
   // 绑定保存按钮
