@@ -155,3 +155,5 @@ body.readonly .card-actions { display: none !important; }
 .draft-banner b { color: #78350f; }
 .draft-discard-btn { margin-left: 12px; padding: 4px 12px; border: 1px solid #f59e0b; background: #fff; color: #92400e; border-radius: 6px; font-size: 12px; cursor: pointer; white-space: nowrap; transition: .15s; }
 .draft-discard-btn:hover { background: #f59e0b; color: #fff; }
+.draft-publish-btn { margin-left: 12px; padding: 4px 14px; border: 1px solid #3b82f6; background: #3b82f6; color: #fff; border-radius: 6px; font-size: 12px; cursor: pointer; white-space: nowrap; transition: .15s; font-weight: 500; }
+.draft-publish-btn:hover { background: #2563eb; border-color: #2563eb; }

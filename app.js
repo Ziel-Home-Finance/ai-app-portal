@@ -1,4 +1,8 @@
 const LS_DRAFT_KEY = 'ai_app_portal_draft_v2';
+const LS_GH_TOKEN_KEY = 'ai_app_portal_gh_token';
+const GH_REPO = 'Ziel-Home-Finance/ai-app-portal';
+const GH_BRANCH = 'main';
+const GH_FILE_PATH = 'apps.json';
 let baseState = null;
 let state = { meta: { title: 'AI 应用导航台', subtitle: '', adminPassword: '' }, categories: [], apps: [] };
 let isAdmin = false;
@@ -103,9 +107,11 @@ function renderMenu() {
     addM(wrap, '⬆️  导入配置', () => $('#importFile').click());
     if (hasDraft) addM(wrap, '🗑  放弃本地草稿', discardDraft);
     addSep(wrap);
+    addM(wrap, '🚀  一键发版到 GitHub' + (hasDraft ? '（有未发布修改）' : ''), publishToGitHub);
+    addM(wrap, '📤  导出配置（下载 JSON）', exportConfig);
+    addSep(wrap);
     addM(wrap, '🚪  退出管理模式', logout);
   }
-  addM(wrap, '📤  导出配置' + (hasDraft ? '（发布给团队）' : ''), exportConfig);
 }
 function addM(wrap, label, fn) {
   const b = document.createElement('button');
@@ -230,6 +236,113 @@ function exportConfig() {
   URL.revokeObjectURL(url);
   toast(hasDraft ? '已导出草稿 · 把 JSON 发给管理员更新部署版，即可全员同步' : '已导出配置');
 }
+
+// ---- GitHub 一键发版 ----
+function getGHToken() {
+  return localStorage.getItem(LS_GH_TOKEN_KEY) || '';
+}
+function promptGHToken() {
+  const t = prompt('请输入 GitHub Personal Access Token（需要 repo 权限）：\n\n获取方式：GitHub → Settings → Developer settings → Personal access tokens → Tokens (classic) → Generate new token → 勾选 repo → 生成\n\nToken 仅存储在你本地浏览器，不会上传。');
+  if (t === null) return null;
+  if (t.trim().length < 10) { toast('Token 格式不正确'); return null; }
+  localStorage.setItem(LS_GH_TOKEN_KEY, t.trim());
+  return t.trim();
+}
+async function publishToGitHub() {
+  if (!hasDraft) { toast('没有本地修改需要发布'); return; }
+  if (!isAdmin) { toast('需要管理员权限'); return; }
+
+  let token = getGHToken();
+  if (!token) {
+    token = promptGHToken();
+    if (!token) return;
+  }
+
+  // 确认发版
+  const ok = confirm('确认将本地修改发布到 GitHub？\n\n发布后约 1-2 分钟 GitHub Pages 自动部署生效。\n全员刷新页面即可看到最新内容。');
+  if (!ok) return;
+
+  toast('正在发布到 GitHub…');
+
+  try {
+    // 1. 获取当前文件的 SHA（必须，用于更新）
+    const getUrl = 'https://api.github.com/repos/' + GH_REPO + '/contents/' + GH_FILE_PATH + '?ref=' + GH_BRANCH;
+    const getRes = await fetch(getUrl, {
+      headers: { 'Authorization': 'token ' + token, 'Accept': 'application/vnd.github.v3+json' }
+    });
+
+    if (getRes.status === 401) {
+      localStorage.removeItem(LS_GH_TOKEN_KEY);
+      toast('Token 无效或已过期，请重新输入');
+      const newToken = promptGHToken();
+      if (newToken) return publishToGitHub();
+      return;
+    }
+    if (getRes.status === 403 && getRes.headers.get('X-RateLimit-Remaining') === '0') {
+      toast('GitHub API 速率限制，请稍后再试');
+      return;
+    }
+    if (!getRes.ok && getRes.status !== 404) {
+      toast('获取文件信息失败：HTTP ' + getRes.status);
+      return;
+    }
+
+    let sha = null;
+    if (getRes.status === 200) {
+      const fileData = await getRes.json();
+      sha = fileData.sha;
+    }
+
+    // 2. 准备发布的数据（去掉 adminPassword，不发布到远程）
+    const publishData = {
+      meta: { title: state.meta.title || 'AI 应用导航台', subtitle: state.meta.subtitle || '' },
+      categories: state.categories,
+      apps: state.apps
+    };
+    const content = btoa(unescape(encodeURIComponent(JSON.stringify(publishData, null, 2))));
+
+    // 3. PUT 更新文件
+    const putUrl = 'https://api.github.com/repos/' + GH_REPO + '/contents/' + GH_FILE_PATH;
+    const putRes = await fetch(putUrl, {
+      method: 'PUT',
+      headers: { 'Authorization': 'token ' + token, 'Accept': 'application/vnd.github.v3+json', 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        message: 'chore: 更新应用导航台配置（一键发版）',
+        content: content,
+        sha: sha,
+        branch: GH_BRANCH
+      })
+    });
+
+    if (!putRes.ok) {
+      if (putRes.status === 401) {
+        localStorage.removeItem(LS_GH_TOKEN_KEY);
+        toast('Token 无效，请重新输入');
+        const newToken = promptGHToken();
+        if (newToken) return publishToGitHub();
+        return;
+      }
+      const errData = await putRes.json().catch(() => ({}));
+      toast('发版失败：' + (errData.message || 'HTTP ' + putRes.status));
+      return;
+    }
+
+    // 4. 发版成功，清理草稿
+    const result = await putRes.json();
+    localStorage.removeItem(LS_DRAFT_KEY);
+    baseState = JSON.parse(JSON.stringify(publishData));
+    baseState.meta = baseState.meta || {};
+    baseState.meta.adminPassword = state.meta.adminPassword || '';
+    state = JSON.parse(JSON.stringify(baseState));
+    hasDraft = false;
+    renderBanner();
+    renderMenu();
+    toast('✅ 已发布到 GitHub！约 1-2 分钟后全员可见，请刷新页面（Ctrl+Shift+R）');
+
+  } catch (err) {
+    toast('发版出错：' + err.message);
+  }
+}
 function discardDraft() {
   if (!hasDraft) { toast('没有本地草稿'); return; }
   if (!confirm('放弃本地草稿？所有未发布的修改将丢失，恢复到部署版。')) return;
@@ -310,6 +423,7 @@ function bind() {
   });
   $('#importFile').addEventListener('change', onImport);
   $('#draftDiscardBtn').addEventListener('click', discardDraft);
+  $('#draftPublishBtn').addEventListener('click', publishToGitHub);
   $('#catModalClose').addEventListener('click', closeCatModal);
   $('#catModalCancel').addEventListener('click', closeCatModal);
   $('#catModalAdd').addEventListener('click', addCat);

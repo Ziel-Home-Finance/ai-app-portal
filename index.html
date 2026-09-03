@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>AI 应用导航台</title>
-<link rel="stylesheet" href="style.css?v=20260903a">
+<link rel="stylesheet" href="style.css?v=20260903b">
 </head>
 <body>
 <div class="app">
@@ -27,7 +27,8 @@
 
   <div class="draft-banner" id="draftBanner" hidden>
     <span class="b-icon">⚠️</span>
-    <span>你有 <b>本地修改</b> 未发布给团队 · 发布方法：⚙️ → 导出配置 → 编辑 GitHub 仓库 apps.json → Commit to main</span>
+    <span>你有 <b>本地修改</b> 未发布给团队</span>
+    <button class="draft-publish-btn" id="draftPublishBtn">🚀 一键发版</button>
     <button class="draft-discard-btn" id="draftDiscardBtn">放弃修改</button>
   </div>
 
@@ -129,6 +130,6 @@
 
   <div class="toast" id="toast" hidden></div>
 </div>
-<script src="app.js?v=20260903a"></script>
+<script src="app.js?v=20260903b"></script>
 </body>
 </html>
