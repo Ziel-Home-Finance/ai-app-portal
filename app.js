@@ -165,14 +165,27 @@ function renderCatList() {
     const nm = document.createElement('span'); nm.className = 'cat-name'; nm.textContent = c.name;
     const cnt = document.createElement('span'); cnt.className = 'cat-count'; cnt.textContent = used + ' 个应用';
     const acts = document.createElement('div'); acts.className = 'cat-actions';
+    const upBtn = document.createElement('button'); upBtn.textContent = '↑'; upBtn.title = '上移';
+    upBtn.addEventListener('click', () => moveCat(i, -1));
+    const dnBtn = document.createElement('button'); dnBtn.textContent = '↓'; dnBtn.title = '下移';
+    dnBtn.addEventListener('click', () => moveCat(i, 1));
     const eb = document.createElement('button'); eb.textContent = '✎'; eb.title = '编辑';
     eb.addEventListener('click', () => editCat(i));
     const db = document.createElement('button'); db.textContent = '🗑'; db.title = '删除';
     db.addEventListener('click', () => delCat(i));
-    acts.append(eb, db);
+    acts.append(upBtn, dnBtn, eb, db);
     row.append(ico, nm, cnt, acts);
     list.appendChild(row);
   });
+}
+function moveCat(i, dir) {
+  const j = i + dir;
+  if (j < 0 || j >= state.categories.length) return;
+  const tmp = state.categories[i];
+  state.categories[i] = state.categories[j];
+  state.categories[j] = tmp;
+  markDraft();
+  renderCategories(); render(); renderCatList();
 }
 function editCat(i) {
   const c = state.categories[i];
