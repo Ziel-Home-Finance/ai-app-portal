@@ -1,27 +1,20 @@
 {
   "meta": {
     "title": "财务中心-AI应用导航台",
-    "subtitle": "统一入口 · 快速触达所有 AI 应用",
-    "adminPassword": "wzp202601"
+    "subtitle": "统一入口 · 快速触达所有 AI 应用"
   },
   "categories": [
+    {
+      "id": "cat_1788430935120",
+      "name": "主数据",
+      "icon": "📁",
+      "color": "#6b7280"
+    },
     {
       "id": "automation",
       "name": "信息披露",
       "icon": "⚡",
       "color": "#8b5cf6"
-    },
-    {
-      "id": "tool",
-      "name": "税务",
-      "icon": "https://ziel-home-finance.github.io/ai-app-portal/icons/tax.png",
-      "color": "#3b82f6"
-    },
-    {
-      "id": "content",
-      "name": "本地账",
-      "icon": "📝",
-      "color": "#10b981"
     },
     {
       "id": "data",
@@ -30,15 +23,21 @@
       "color": "#f59e0b"
     },
     {
+      "id": "content",
+      "name": "本地账",
+      "icon": "📝",
+      "color": "#10b981"
+    },
+    {
+      "id": "tool",
+      "name": "税务",
+      "icon": "https://ziel-home-finance.github.io/ai-app-portal/icons/tax.png",
+      "color": "#3b82f6"
+    },
+    {
       "id": "other",
       "name": "通用工具",
       "icon": "📦",
-      "color": "#6b7280"
-    },
-    {
-      "id": "cat_1788430935120",
-      "name": "主数据",
-      "icon": "📁",
       "color": "#6b7280"
     }
   ],
@@ -182,7 +181,7 @@
       "url": "https://songmicshome.feishuapp.com/app/app_17dce915k0r",
       "description": "成本中心与利润中心的快捷查询",
       "icon": "https://ziel-home-finance.github.io/ai-app-portal/icons/成本利润中心查询系统.png",
-      "category": "other",
+      "category": "cat_1788430935120",
       "platform": "飞书妙搭",
       "contact": "于利巧",
       "group": "报表合规组",
