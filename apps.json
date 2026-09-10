@@ -189,6 +189,21 @@
         "基础数据"
       ],
       "pinned": false
+    },
+    {
+      "id": "a1789036174167",
+      "name": "会计科目归类复核",
+      "url": "https://songmicshome.feishuapp.com/app/app_17dsv1zt9gp",
+      "description": "记录SAP会计科目、蓝科手工科目在蓝科资产负债表、利润表的归类",
+      "icon": "🔗",
+      "category": "cat_1788430935120",
+      "platform": "飞书妙搭",
+      "contact": "王志鹏",
+      "group": "报表合规组",
+      "tags": [
+        "基础数据"
+      ],
+      "pinned": false
     }
   ]
 }
