@@ -62,7 +62,7 @@ function promptChangePassword() {
   if (p2 !== p1) { toast('两次输入不一致'); return; }
   state.meta.adminPassword = p1;
   markDraft();
-  toast('密码已修改（仅本地草稿，发布后同步给团队）');
+  toast('密码已修改 · 请点"一键发版"同步给团队');
 }
 function clearAdmin() {
   if (!confirm('确定取消管理员保护？取消后所有人都能编辑（不建议）。')) return;
@@ -96,13 +96,11 @@ function renderMenu() {
   wrap.innerHTML = '';
   const hasPwd = hasPassword();
   if (!isAdmin) {
-    if (!hasPwd) addM(wrap, '🔐  成为管理员（设置密码）', promptSetPassword);
-    else addM(wrap, '🔑  管理员登录', promptLogin);
+    addM(wrap, '🔑  管理员登录', promptLogin);
     addSep(wrap);
   } else {
     addM(wrap, '🏷️  管理分类', openCatModal);
     addM(wrap, '🔑  修改管理员密码', promptChangePassword);
-    addM(wrap, '🔓  取消管理员保护', clearAdmin);
     addSep(wrap);
     addM(wrap, '⬆️  导入配置', () => $('#importFile').click());
     if (hasDraft) addM(wrap, '🗑  放弃本地草稿', discardDraft);
@@ -293,9 +291,9 @@ async function publishToGitHub() {
       sha = fileData.sha;
     }
 
-    // 2. 准备发布的数据（去掉 adminPassword，不发布到远程）
+    // 2. 准备发布的数据（含 adminPassword，让全员密码统一）
     const publishData = {
-      meta: { title: state.meta.title || 'AI 应用导航台', subtitle: state.meta.subtitle || '' },
+      meta: { title: state.meta.title || 'AI 应用导航台', subtitle: state.meta.subtitle || '', adminPassword: state.meta.adminPassword || '' },
       categories: state.categories,
       apps: state.apps
     };
@@ -372,9 +370,9 @@ async function init() {
   baseState = await loadBase();
   const draft = loadDraft();
   if (draft) {
-    // 只比对应用和分类数据（不含 adminPassword，因为本地密码可能与部署版不同）
-    const draftData = JSON.stringify({ categories: draft.categories || [], apps: draft.apps || [], title: draft.meta?.title, subtitle: draft.meta?.subtitle });
-    const baseData = JSON.stringify({ categories: baseState.categories || [], apps: baseState.apps || [], title: baseState.meta?.title, subtitle: baseState.meta?.subtitle });
+    // 比对全部数据（含 adminPassword），完全一致则无草稿
+    const draftData = JSON.stringify({ categories: draft.categories || [], apps: draft.apps || [], title: draft.meta?.title, subtitle: draft.meta?.subtitle, adminPassword: draft.meta?.adminPassword || '' });
+    const baseData = JSON.stringify({ categories: baseState.categories || [], apps: baseState.apps || [], title: baseState.meta?.title, subtitle: baseState.meta?.subtitle, adminPassword: baseState.meta?.adminPassword || '' });
     if (draftData === baseData) {
       localStorage.removeItem(LS_DRAFT_KEY);
       state = JSON.parse(JSON.stringify(baseState));
