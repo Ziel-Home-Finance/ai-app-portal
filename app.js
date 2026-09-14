@@ -341,6 +341,88 @@ async function publishToGitHub() {
     toast('发版出错：' + err.message);
   }
 }
+
+// ---- 上传图标到 GitHub ----
+async function uploadIconToGitHub(file) {
+  if (!isAdmin) { toast('需要管理员权限'); return; }
+  if (!file) return;
+
+  let token = getGHToken();
+  if (!token) {
+    token = promptGHToken();
+    if (!token) return;
+  }
+
+  // 文件名用应用名称或原始文件名
+  const ext = file.name.split('.').pop().toLowerCase();
+  const appName = $('#f_name').value.trim();
+  let fileName = appName ? appName + '.' + ext : 'icon_' + Date.now() + '.' + ext;
+  // 清理文件名中的特殊字符
+  fileName = fileName.replace(/[\/\\:*?"<>|]/g, '_');
+
+  const btn = $('#iconUploadBtn');
+  btn.disabled = true;
+  btn.textContent = '⏳';
+  toast('正在上传图标…');
+
+  try {
+    // 读取文件为 base64
+    const reader = new FileReader();
+    const base64 = await new Promise((resolve, reject) => {
+      reader.onload = () => resolve(reader.result.split(',')[1]);
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+
+    // 先检查文件是否已存在（获取 SHA）
+    const checkUrl = 'https://api.github.com/repos/' + GH_REPO + '/contents/icons/' + encodeURIComponent(fileName) + '?ref=' + GH_BRANCH;
+    const checkRes = await fetch(checkUrl, {
+      headers: { 'Authorization': 'token ' + token, 'Accept': 'application/vnd.github.v3+json' }
+    });
+
+    let sha = null;
+    if (checkRes.ok) {
+      const data = await checkRes.json();
+      sha = data.sha;
+    }
+
+    // 上传文件
+    const putUrl = 'https://api.github.com/repos/' + GH_REPO + '/contents/icons/' + encodeURIComponent(fileName);
+    const putRes = await fetch(putUrl, {
+      method: 'PUT',
+      headers: { 'Authorization': 'token ' + token, 'Accept': 'application/vnd.github.v3+json', 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        message: 'upload: 图标 ' + fileName,
+        content: base64,
+        sha: sha,
+        branch: GH_BRANCH
+      })
+    });
+
+    if (!putRes.ok) {
+      if (putRes.status === 401) {
+        localStorage.removeItem(LS_GH_TOKEN_KEY);
+        toast('Token 无效，请重新输入');
+        btn.disabled = false; btn.textContent = '📷';
+        return;
+      }
+      const errData = await putRes.json().catch(() => ({}));
+      toast('上传失败：' + (errData.message || 'HTTP ' + putRes.status));
+      btn.disabled = false; btn.textContent = '📷';
+      return;
+    }
+
+    // 上传成功，填入 URL
+    const iconUrl = 'https://ziel-home-finance.github.io/ai-app-portal/icons/' + encodeURIComponent(fileName) + '?v=' + Date.now();
+    $('#f_icon').value = iconUrl;
+    toast('✅ 图标上传成功');
+    btn.disabled = false; btn.textContent = '📷';
+
+  } catch (err) {
+    toast('上传出错：' + err.message);
+    btn.disabled = false; btn.textContent = '📷';
+  }
+}
 function discardDraft() {
   if (!hasDraft) { toast('没有本地草稿'); return; }
   if (!confirm('放弃本地草稿？所有未发布的修改将丢失，恢复到部署版。')) return;
@@ -422,6 +504,8 @@ function bind() {
   $('#importFile').addEventListener('change', onImport);
   $('#draftDiscardBtn').addEventListener('click', discardDraft);
   $('#draftPublishBtn').addEventListener('click', publishToGitHub);
+  $('#iconUploadBtn').addEventListener('click', () => { if (isAdmin) $('#iconFile').click(); });
+  $('#iconFile').addEventListener('change', (e) => { if (e.target.files[0]) uploadIconToGitHub(e.target.files[0]); e.target.value = ''; });
   $('#catModalClose').addEventListener('click', closeCatModal);
   $('#catModalCancel').addEventListener('click', closeCatModal);
   $('#catModalAdd').addEventListener('click', addCat);

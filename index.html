@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>AI 应用导航台</title>
-<link rel="stylesheet" href="style.css?v=20260914a">
+<link rel="stylesheet" href="style.css?v=20260914b">
 </head>
 <body>
 <div class="app">
@@ -75,7 +75,11 @@
         <div class="field-row">
           <div class="field">
             <label>图标</label>
-            <input id="f_icon" placeholder="emoji 或图片 URL" value="🔗">
+            <div class="icon-input-row">
+              <input id="f_icon" placeholder="emoji 或图片 URL" value="🔗">
+              <button type="button" class="btn-icon-upload" id="iconUploadBtn" title="上传图标图片">📷</button>
+              <input type="file" id="iconFile" accept="image/png,image/jpeg,image/jpg,image/gif,image/svg+xml" hidden>
+            </div>
           </div>
           <div class="field">
             <label>用途分类</label>
@@ -130,6 +134,6 @@
 
   <div class="toast" id="toast" hidden></div>
 </div>
-<script src="app.js?v=20260914a"></script>
+<script src="app.js?v=20260914b"></script>
 </body>
 </html>

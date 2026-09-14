@@ -103,6 +103,13 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Micr
 .field textarea{resize:vertical;min-height:60px}
 .field.checkbox{flex-direction:row;align-items:center;gap:8px}
 .field.checkbox input{width:auto}
+
+/* icon upload */
+.icon-input-row{display:flex;gap:8px;align-items:stretch}
+.icon-input-row input{flex:1}
+.btn-icon-upload{border:1px solid var(--border);background:var(--surface);border-radius:9px;padding:0 14px;cursor:pointer;font-size:18px;color:var(--text-sub);transition:.15s;white-space:nowrap}
+.btn-icon-upload:hover{border-color:var(--primary);color:var(--primary)}
+.btn-icon-upload:disabled{opacity:.5;cursor:default}
 .modal-foot{display:flex;justify-content:flex-end;gap:10px;margin-top:6px}
 .btn{padding:9px 18px;border-radius:9px;border:1px solid var(--border);background:var(--surface);cursor:pointer;font-size:14px;font-weight:500;transition:.15s;color:var(--text)}
 .btn:hover{background:var(--bg)}
