@@ -375,7 +375,7 @@ async function uploadIconToGitHub(file) {
     });
 
     // 先检查文件是否已存在（获取 SHA）
-    const checkUrl = 'https://api.github.com/repos/' + GH_REPO + '/contents/icons/' + encodeURIComponent(fileName) + '?ref=' + GH_BRANCH;
+    const checkUrl = 'https://api.github.com/repos/' + GH_REPO + '/contents/icons/' + fileName + '?ref=' + GH_BRANCH;
     const checkRes = await fetch(checkUrl, {
       headers: { 'Authorization': 'token ' + token, 'Accept': 'application/vnd.github.v3+json' }
     });
@@ -387,7 +387,7 @@ async function uploadIconToGitHub(file) {
     }
 
     // 上传文件
-    const putUrl = 'https://api.github.com/repos/' + GH_REPO + '/contents/icons/' + encodeURIComponent(fileName);
+    const putUrl = 'https://api.github.com/repos/' + GH_REPO + '/contents/icons/' + fileName;
     const putRes = await fetch(putUrl, {
       method: 'PUT',
       headers: { 'Authorization': 'token ' + token, 'Accept': 'application/vnd.github.v3+json', 'Content-Type': 'application/json' },
@@ -412,8 +412,8 @@ async function uploadIconToGitHub(file) {
       return;
     }
 
-    // 上传成功，填入 URL
-    const iconUrl = 'https://ziel-home-finance.github.io/ai-app-portal/icons/' + encodeURIComponent(fileName) + '?v=' + Date.now();
+    // 上传成功，填入 URL（不编码中文，保持与其他图标一致）
+    const iconUrl = 'https://ziel-home-finance.github.io/ai-app-portal/icons/' + fileName + '?v=' + Date.now();
     $('#f_icon').value = iconUrl;
     toast('✅ 图标上传成功');
     btn.disabled = false; btn.textContent = '📷';
