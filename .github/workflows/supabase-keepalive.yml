@@ -12,6 +12,9 @@ jobs:
     permissions:
       contents: write
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
       - name: Ping Supabase API
         env:
           SUPABASE_URL: https://vmxgzyctprcdqprjhulk.supabase.co
@@ -34,9 +37,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          # Create or update a keepalive marker file to generate repo activity
           echo "Last keepalive: $(date -u '+%Y-%m-%d %H:%M:%S UTC')" > .github/keepalive-marker.txt
           git add .github/keepalive-marker.txt
-          # Only commit if there are changes (avoids empty commit errors)
           git diff --quiet && git diff --cached --quiet || git commit -m "chore: keepalive ping $(date -u '+%Y-%m-%d')"
           git push
