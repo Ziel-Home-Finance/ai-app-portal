@@ -1,0 +1,29 @@
+name: Supabase Keepalive
+
+on:
+  schedule:
+    # 每 4 天 UTC 01:00（北京时间 09:00）执行一次
+    - cron: '0 1 */4 * *'
+  workflow_dispatch: # 允许手动触发
+
+jobs:
+  keepalive:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping Supabase API
+        env:
+          SUPABASE_URL: https://vmxgzyctprcdqprjhulk.supabase.co
+          SUPABASE_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+        run: |
+          echo "Pinging Supabase at $(date -u '+%Y-%m-%d %H:%M:%S UTC')"
+          STATUS=$(curl -s -o /dev/null -w "%{http_code}" \
+            -H "apikey: $SUPABASE_KEY" \
+            -H "Authorization: Bearer $SUPABASE_KEY" \
+            "$SUPABASE_URL/rest/v1/bond_ledgers?select=id&limit=1")
+          echo "HTTP Status: $STATUS"
+          if [ "$STATUS" = "200" ]; then
+            echo "✅ Supabase is active and responding normally"
+          else
+            echo "⚠️ Supabase returned status $STATUS - project may be paused"
+            exit 1
+          fi
