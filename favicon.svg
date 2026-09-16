@@ -1,0 +1,10 @@
+<svg viewBox="0 0 680 680" width="680" height="680" role="img" xmlns="http://www.w3.org/2000/svg">
+  <title>财务中心AI导航台图标 - 放大镜放大版</title>
+  <desc>青蓝背景，放大镜整体放大，镜片内人民币符号同步放大</desc>
+  <rect x="40" y="40" width="600" height="600" rx="130" fill="#9FEAEC"/>
+  <circle cx="280" cy="280" r="180" fill="#FFFFFF" stroke="#185FA5" stroke-width="18"/>
+  <circle cx="280" cy="280" r="180" fill="none" stroke="#378ADD" stroke-width="3" stroke-opacity="0.5"/>
+  <text x="280" y="365" font-family="sans-serif" font-size="250" font-weight="700" fill="#185FA5" text-anchor="middle">¥</text>
+  <line x1="407" y1="407" x2="535" y2="535" stroke="#185FA5" stroke-width="32" stroke-linecap="round"/>
+  <line x1="407" y1="407" x2="535" y2="535" stroke="#0C447C" stroke-width="16" stroke-linecap="round"/>
+</svg>
