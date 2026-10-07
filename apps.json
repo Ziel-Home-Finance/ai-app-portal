@@ -205,6 +205,23 @@
         "基础数据"
       ],
       "pinned": false
+    },
+    {
+      "id": "a1791355526971",
+      "name": "墨西哥发票管理系统",
+      "url": "https://songmicshome.doubaoapps.com/app/app_17f04s1xgct",
+      "description": "",
+      "icon": "https://ziel-home-finance.github.io/ai-app-portal/icons/墨西哥发票管理系统.png?v=1791355514143",
+      "category": "tool",
+      "platform": "飞书妙搭",
+      "contact": "王志鹏",
+      "group": "报表合规组",
+      "tags": [
+        "税务",
+        "数据识别",
+        "墨西哥"
+      ],
+      "pinned": false
     }
   ]
 }
