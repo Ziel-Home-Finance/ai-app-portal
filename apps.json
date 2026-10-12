@@ -142,23 +142,6 @@
       "pinned": false
     },
     {
-      "id": "a1788228069407",
-      "name": "墨西哥发票管理系统",
-      "url": "https://ziel-home-finance.github.io/cfdi-system",
-      "description": "墨西哥XML发票、PDF关单的识别、存储、数据管理分析",
-      "icon": "https://ziel-home-finance.github.io/ai-app-portal/icons/墨西哥发票管理系统.png?v=20260901b",
-      "category": "tool",
-      "platform": "WORKBUDDY",
-      "contact": "王志鹏",
-      "group": "报表合规组",
-      "tags": [
-        "税务",
-        "数据识别",
-        "墨西哥"
-      ],
-      "pinned": false
-    },
-    {
       "id": "a1788329101183",
       "name": "外汇衍生工具台账",
       "url": "https://songmicshome.feishuapp.com/app/app_4kcuddyshb86m",
