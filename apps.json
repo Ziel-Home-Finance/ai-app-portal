@@ -205,6 +205,22 @@
         "墨西哥"
       ],
       "pinned": false
+    },
+    {
+      "id": "a1792727846535",
+      "name": "六大往来报表整理助手",
+      "url": "https://songmicshome.feishu.link/app/app_17cbhe5961q",
+      "description": "集团披露口径六大往来报表",
+      "icon": "🔗",
+      "category": "automation",
+      "platform": "飞书妙搭",
+      "contact": "张玥",
+      "group": "报表合规组",
+      "tags": [
+        "财报附注",
+        "信息披露"
+      ],
+      "pinned": false
     }
   ]
 }
